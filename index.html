@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Grammar Exam - S1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary: #c8102e; /* Red (UK style) */
+            --secondary: #012169; /* Blue (UK style) */
+            --accent: #fcd116; 
+            --success: #10b981; 
+            --error: #ef4444; 
+            --bg: #f3f4f6; 
+            --dark: #1f2937; 
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--dark); margin: 0; padding: 0; }
+        
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; z-index: 9999;
+        }
+        .login-box {
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 40px; border-radius: 15px; 
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); width: 90%; max-width: 400px;
+            color: var(--dark);
+        }
+        .login-input {
+            width: 100%; padding: 12px; margin: 15px 0; border-radius: 6px; border: 2px solid #e5e7eb;
+            font-size: 16px; text-align: center; box-sizing: border-box;
+        }
+        .login-btn {
+            background: var(--secondary); color: white; width: 100%; padding: 12px; border: none;
+            border-radius: 6px; font-size: 18px; cursor: pointer; font-weight: bold; transition: 0.3s;
+        }
+        .login-btn:hover { background: #1e3a8a; }
+
+        /* --- EXAM INTERFACE --- */
+        #exam-interface { display: none; padding-bottom: 50px; }
+        
+        .header-bar {
+            background: white; padding: 15px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
+        }
+        .student-info { font-weight: bold; color: var(--secondary); display: flex; align-items: center; gap: 10px; }
+        .score-badge { 
+            background: var(--primary); color: white; padding: 8px 20px; 
+            border-radius: 50px; font-weight: bold; font-size: 1.1em; 
+        }
+
+        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+
+        /* --- RULES SECTION --- */
+        .rules-container {
+            background: white; padding: 25px; border-radius: 12px; margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid var(--accent);
+        }
+        .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .rule-card { background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .rule-title { font-weight: bold; color: var(--secondary); margin-bottom: 10px; display: block; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;}
+        .keyword { color: var(--primary); font-weight: bold; }
+
+        /* --- QCM CARDS --- */
+        .section-title { 
+            margin-top: 50px; background: var(--secondary); padding: 15px 20px; 
+            border-radius: 8px; color: white; display: flex; align-items: center; gap: 10px;
+        }
+        
+        .qcm-block { 
+            background: white; margin-bottom: 20px; border-radius: 12px; padding: 25px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e5e7eb; position: relative;
+        }
+        .question-number {
+            position: absolute; top: 20px; right: 20px; font-size: 0.8em; color: #9ca3af; font-weight: bold;
+        }
+        .question-text { font-weight: 600; font-size: 1.15em; margin-bottom: 20px; padding-right: 30px; }
+        
+        .options { display: grid; gap: 10px; }
+        .option-btn { 
+            background: #f9fafb; border: 2px solid #e5e7eb; padding: 15px; border-radius: 8px; 
+            cursor: pointer; text-align: left; transition: 0.2s; font-size: 1em; position: relative;
+        }
+        .option-btn:hover { border-color: var(--secondary); background: #eff6ff; }
+        
+        .correct-ans { background-color: #d1fae5 !important; border-color: var(--success) !important; color: #065f46; }
+        .wrong-ans { background-color: #fee2e2 !important; border-color: var(--error) !important; color: #991b1b; }
+        
+        .explanation { 
+            display: none; margin-top: 15px; padding: 15px; background: #eff6ff; 
+            border-radius: 8px; border-left: 4px solid var(--secondary); color: #1e3a8a; font-size: 0.95em;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h1 style="color:var(--primary); margin:0;">🇬🇧 English Grammar</h1>
+            <p style="color:#6b7280;">Practice Exam S1</p>
+            
+            <div style="background: #e5e7eb; padding: 5px 15px; border-radius: 20px; display: inline-block; margin: 15px 0; font-weight: bold;">
+                <i class="fa-solid fa-user"></i> Omar El Youssfi
+            </div>
+            
+            <input type="password" id="password" class="login-input" placeholder="Password...">
+            <button class="login-btn" onclick="checkSecurity()">Start Exam</button>
+            <p id="error-msg" style="color:var(--error); display:none; margin-top:10px;">Incorrect Password</p>
+        </div>
+    </div>
+
+    <div id="exam-interface">
+        <div class="header-bar">
+            <div class="student-info"><i class="fa-solid fa-graduation-cap"></i> Omar El Youssfi</div>
+            <div class="score-badge">Score : <span id="score">0</span> / 55</div>
+        </div>
+
+        <div class="container">
+            
+            <div class="rules-container">
+                <h2 style="margin-top:0; color:var(--secondary);"><i class="fa-solid fa-book"></i> Règles à retenir (Cheat Sheet)</h2>
+                <div class="rules-grid">
+                    <div class="rule-card">
+                        <span class="rule-title">Present Simple (Habitudes)</span>
+                        Utilisé pour : Habitudes, Vérités générales.<br>
+                        <em>Mots clés :</em> Usually, Always, Every day, Often.<br>
+                        <strong>Règle :</strong> Sujet + Verbe (Ajouter 's' pour He/She/It).<br>
+                        Ex: <em>She play<span class="keyword">s</span> tennis.</em>
+                    </div>
+                    <div class="rule-card">
+                        <span class="rule-title">Present Continuous (Maintenant)</span>
+                        Utilisé pour : Actions en cours, maintenant.<br>
+                        <em>Mots clés :</em> Now, At the moment, Look!, Listen!<br>
+                        <strong>Règle :</strong> Am/Is/Are + Verbe-ING.<br>
+                        Ex: <em>She <span class="keyword">is</span> play<span class="keyword">ing</span> now.</em>
+                    </div>
+                    <div class="rule-card">
+                        <span class="rule-title">Simple Past (Passé fini)</span>
+                        Utilisé pour : Actions terminées dans le passé.<br>
+                        <em>Mots clés :</em> Yesterday, Last week, In 2010, Ago.<br>
+                        <strong>Règle :</strong> Verbe + ED (ou irrégulier).<br>
+                        Ex: <em>I visit<span class="keyword">ed</span> Paris. I <span class="keyword">went</span> home.</em>
+                    </div>
+                    <div class="rule-card">
+                        <span class="rule-title">Prepositions of Time</span>
+                        <span class="keyword">AT</span> : Heures, Moments précis (At 8:00, At night, At the weekend).<br>
+                        <span class="keyword">ON</span> : Jours, Dates complètes (On Monday, On May 1st).<br>
+                        <span class="keyword">IN</span> : Mois, Années, Saisons (In June, In 2024, In Summer).
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title"><i class="fa-solid fa-clock"></i> Tenses: Present Simple vs Continuous</h2>
+            <div id="section-tenses1"></div>
+
+            <h2 class="section-title"><i class="fa-solid fa-history"></i> Tenses: Simple Past</h2>
+            <div id="section-past"></div>
+
+            <h2 class="section-title"><i class="fa-solid fa-calendar-alt"></i> Prepositions (In, On, At)</h2>
+            <div id="section-prepos"></div>
+
+        </div>
+    </div>
+
+<script>
+    // --- SECURITY ---
+    function checkSecurity() {
+        const pass = document.getElementById("password").value;
+        if (pass.toLowerCase() === "omar") {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("exam-interface").style.display = "block";
+        } else {
+            document.getElementById("error-msg").style.display = "block";
+        }
+    }
+    document.getElementById("password").addEventListener("keypress", (e) => { if(e.key==="Enter") checkSecurity(); });
+
+    // --- QUESTIONS DATABASE (55 Questions) ---
+    const dbQCM = [
+        // --- PRESENT SIMPLE VS CONTINUOUS (20) ---
+        { cat: "t1", q: "Look! It ________ outside.", opts: ["rains", "is raining", "rained"], ans: 1, exp: "<strong>Look!</strong> indique une action qui se passe maintenant -> Present Continuous." },
+        { cat: "t1", q: "She usually ________ to school by bus.", opts: ["go", "goes", "is going"], ans: 1, exp: "<strong>Usually</strong> indique une habitude -> Present Simple. (She goes)." },
+        { cat: "t1", q: "Listen! The baby ________.", opts: ["cry", "cries", "is crying"], ans: 2, exp: "<strong>Listen!</strong> indique une action en cours -> Present Continuous." },
+        { cat: "t1", q: "They ________ TV every evening.", opts: ["watch", "watches", "are watching"], ans: 0, exp: "<strong>Every evening</strong> = Habitude -> Present Simple." },
+        { cat: "t1", q: "I ________ my homework right now.", opts: ["do", "am doing", "does"], ans: 1, exp: "<strong>Right now</strong> = En ce moment -> Present Continuous." },
+        { cat: "t1", q: "He ________ smoke. It's bad for his health.", opts: ["isn't", "don't", "doesn't"], ans: 2, exp: "Négation au Present Simple pour 'He' = Doesn't." },
+        { cat: "t1", q: "We ________ lunch at the moment.", opts: ["have", "are having", "has"], ans: 1, exp: "<strong>At the moment</strong> = Present Continuous." },
+        { cat: "t1", q: "Water ________ at 100 degrees Celsius.", opts: ["boil", "boils", "is boiling"], ans: 1, exp: "C'est une vérité scientifique/générale -> Present Simple." },
+        { cat: "t1", q: "Why ________ you wearing a coat today?", opts: ["do", "are", "is"], ans: 1, exp: "Action temporaire (aujourd'hui) -> Present Continuous (Are you wearing)." },
+        { cat: "t1", q: "My father ________ in a bank.", opts: ["work", "works", "is working"], ans: 1, exp: "État permanent -> Present Simple." },
+        { cat: "t1", q: "Shh! Be quiet. I ________ to study.", opts: ["try", "tries", "am trying"], ans: 2, exp: "Action en cours (maintenant) -> Continuous." },
+        { cat: "t1", q: "They ________ like chocolate.", opts: ["doesn't", "don't", "aren't"], ans: 1, exp: "Present Simple Négatif (They don't)." },
+        { cat: "t1", q: "What time ________ the train leave?", opts: ["do", "does", "is"], ans: 1, exp: "Horaires officiels = Present Simple (Does)." },
+        { cat: "t1", q: "He usually plays football, but today he ________ tennis.", opts: ["plays", "is playing", "play"], ans: 1, exp: "Contraste : Habitude (plays) vs Aujourd'hui (is playing)." },
+        { cat: "t1", q: "________ she speak English?", opts: ["Do", "Does", "Is"], ans: 1, exp: "Question au Present Simple (She) -> Does." },
+        { cat: "t1", q: "We ________ to the cinema very often.", opts: ["not go", "don't go", "doesn't go"], ans: 1, exp: "Habitude négative -> Don't go." },
+        { cat: "t1", q: "Where ________ you live?", opts: ["are", "do", "does"], ans: 1, exp: "Question sur un état permanent -> Do you live." },
+        { cat: "t1", q: "Look at that man! He ________ a green hat.", opts: ["wears", "is wearing", "wear"], ans: 1, exp: "Description de ce qu'on voit maintenant -> Is wearing." },
+        { cat: "t1", q: "I ________ understand this question.", opts: ["am not", "doesn't", "don't"], ans: 2, exp: "Verbe d'état (understand) -> Toujours Simple Present." },
+        { cat: "t1", q: "________ you coming to the party?", opts: ["Do", "Are", "Have"], ans: 1, exp: "Futur proche ou action en cours -> Are you coming." },
+
+        // --- PAST SIMPLE (15) ---
+        { cat: "past", q: "I ________ to the cinema yesterday.", opts: ["go", "goed", "went"], ans: 2, exp: "Yesterday = Passé. Verbe irrégulier GO -> WENT." },
+        { cat: "past", q: "She ________ pizza last night.", opts: ["eat", "ate", "eaten"], ans: 1, exp: "Last night = Passé. Verbe irrégulier EAT -> ATE." },
+        { cat: "past", q: "They ________ play football because it was raining.", opts: ["don't", "didn't", "wasn't"], ans: 1, exp: "Négation au passé = DIDN'T + Verbe base." },
+        { cat: "past", q: "Where ________ you go on holiday last year?", opts: ["did", "do", "were"], ans: 0, exp: "Question au passé = DID + Sujet + Verbe." },
+        { cat: "past", q: "We ________ very happy to see him.", opts: ["was", "were", "did"], ans: 1, exp: "Verbe Être (Be) au passé pour 'We' -> WERE." },
+        { cat: "past", q: "He ________ his keys yesterday.", opts: ["lost", "losed", "lose"], ans: 0, exp: "Verbe irrégulier LOSE -> LOST." },
+        { cat: "past", q: "I ________ TV yesterday evening.", opts: ["watch", "watched", "watching"], ans: 1, exp: "Verbe régulier WATCH -> WATCHED." },
+        { cat: "past", q: "________ she visit her grandmother?", opts: ["Did", "Does", "Was"], ans: 0, exp: "Question passé = DID." },
+        { cat: "past", q: "We ________ buy the car. It was too expensive.", opts: ["didn't", "don't", "not"], ans: 0, exp: "Négation passé = Didn't." },
+        { cat: "past", q: "When ________ Shakespeare die?", opts: ["did", "was", "does"], ans: 0, exp: "Question historique = DID." },
+        { cat: "past", q: "She ________ late for class this morning.", opts: ["was", "were", "did"], ans: 0, exp: "Verbe Être (She) au passé -> WAS." },
+        { cat: "past", q: "I ________ a shower an hour ago.", opts: ["have", "has", "had"], ans: 2, exp: "Passé de HAVE -> HAD." },
+        { cat: "past", q: "They ________ stay at home last weekend.", opts: ["didn't", "weren't", "don't"], ans: 0, exp: "Négation action = Didn't." },
+        { cat: "past", q: "Who ________ you meet at the party?", opts: ["did", "were", "had"], ans: 0, exp: "Question passé = Did you meet." },
+        { cat: "past", q: "He ________ me a nice gift.", opts: ["give", "gived", "gave"], ans: 2, exp: "Verbe irrégulier GIVE -> GAVE." },
+
+        // --- PREPOSITIONS (20) ---
+        { cat: "prep", q: "The meeting is ________ 9 o'clock.", opts: ["in", "on", "at"], ans: 2, exp: "Heure précise -> AT." },
+        { cat: "prep", q: "My birthday is ________ June.", opts: ["in", "on", "at"], ans: 0, exp: "Mois sans le jour -> IN." },
+        { cat: "prep", q: "I was born ________ 1995.", opts: ["at", "on", "in"], ans: 2, exp: "Année -> IN." },
+        { cat: "prep", q: "We have a class ________ Monday.", opts: ["in", "at", "on"], ans: 2, exp: "Jours de la semaine -> ON." },
+        { cat: "prep", q: "She got married ________ September 12th.", opts: ["in", "on", "at"], ans: 1, exp: "Date précise avec le jour -> ON." },
+        { cat: "prep", q: "I usually read ________ night.", opts: ["in", "on", "at"], ans: 2, exp: "Expression fixe -> AT night." },
+        { cat: "prep", q: "We go to the beach ________ the summer.", opts: ["at", "in", "on"], ans: 1, exp: "Saisons -> IN." },
+        { cat: "prep", q: "See you ________ lunchtime!", opts: ["in", "on", "at"], ans: 2, exp: "Moment précis (repas) -> AT." },
+        { cat: "prep", q: "He arrived ________ the morning.", opts: ["in", "at", "on"], ans: 0, exp: "Partie de la journée -> IN the morning/afternoon." },
+        { cat: "prep", q: "The shop is closed ________ Sundays.", opts: ["in", "at", "on"], ans: 2, exp: "Jours -> ON." },
+        { cat: "prep", q: "I will see you ________ the weekend.", opts: ["in", "at", "on"], ans: 1, exp: "En anglais britannique on dit souvent AT the weekend (ON aux USA)." },
+        { cat: "prep", q: "The party is ________ Friday night.", opts: ["in", "on", "at"], ans: 1, exp: "Jour spécifique -> ON." },
+        { cat: "prep", q: "Life was different ________ the 19th century.", opts: ["at", "on", "in"], ans: 2, exp: "Siècles/Périodes longues -> IN." },
+        { cat: "prep", q: "Can you come ________ Christmas?", opts: ["in", "at", "on"], ans: 1, exp: "Fête (période) -> AT Christmas." },
+        { cat: "prep", q: "I wake up ________ 7:00 am.", opts: ["on", "in", "at"], ans: 2, exp: "Heure -> AT." },
+        { cat: "prep", q: "My exam is ________ Tuesday morning.", opts: ["in", "on", "at"], ans: 1, exp: "Jour + Moment -> ON." },
+        { cat: "prep", q: "It happened ________ 2001.", opts: ["on", "at", "in"], ans: 2, exp: "Année -> IN." },
+        { cat: "prep", q: "She likes to ski ________ winter.", opts: ["at", "on", "in"], ans: 2, exp: "Saison -> IN." },
+        { cat: "prep", q: "Let's meet ________ noon.", opts: ["in", "on", "at"], ans: 2, exp: "Midi (heure précise 12:00) -> AT." },
+        { cat: "prep", q: "He left ________ May.", opts: ["in", "on", "at"], ans: 0, exp: "Mois seul -> IN." }
+    ];
+
+    // --- RENDER FUNCTIONS ---
+    let currentScore = 0;
+
+    function renderQuestions() {
+        dbQCM.forEach((item, index) => {
+            let target = "section-tenses1";
+            if(item.cat === "past") target = "section-past";
+            if(item.cat === "prep") target = "section-prepos";
+
+            const card = document.createElement("div");
+            card.className = "qcm-block";
+            card.innerHTML = `
+                <div class="question-number">Q${index+1}</div>
+                <div class="question-text">${item.q}</div>
+                <div class="options">
+                    ${item.opts.map((opt, i) => `
+                        <button class="option-btn" onclick="checkAnswer(this, ${index}, ${i})">${opt}</button>
+                    `).join('')}
+                </div>
+                <div class="explanation" id="exp-${index}">
+                    <i class="fa-solid fa-info-circle"></i> ${item.exp}
+                </div>
+            `;
+            document.getElementById(target).appendChild(card);
+        });
+    }
+
+    function checkAnswer(btn, qIndex, choiceIndex) {
+        const parent = btn.parentElement;
+        if(parent.getAttribute("data-answered")) return; // Anti-spam
+        
+        parent.setAttribute("data-answered", "true");
+        const qData = dbQCM[qIndex];
+        const expDiv = document.getElementById(`exp-${qIndex}`);
+        const allBtns = parent.querySelectorAll(".option-btn");
+
+        if(choiceIndex === qData.ans) {
+            btn.classList.add("correct-ans");
+            btn.innerHTML += ' <i class="fa-solid fa-check"></i>';
+            currentScore++;
+            expDiv.innerHTML = "<strong>Correct!</strong> " + expDiv.innerHTML;
+        } else {
+            btn.classList.add("wrong-ans");
+            allBtns[qData.ans].classList.add("correct-ans");
+            expDiv.innerHTML = "<strong>Wrong.</strong> " + expDiv.innerHTML;
+        }
+        
+        expDiv.style.display = "block";
+        document.getElementById("score").innerText = currentScore;
+    }
+
+    // Start
+    renderQuestions();
+
+</script>
+</body>
+</html>
